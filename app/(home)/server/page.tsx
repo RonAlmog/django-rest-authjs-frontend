@@ -7,7 +7,7 @@ type Props = {};
 const OrdersPage = async (props: Props) => {
   const data = await getServerSession(authOptions);
 
-  return <div>OrdersPage</div>;
+  return <div>Server Page</div>;
 };
 
 export default OrdersPage;

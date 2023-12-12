@@ -2,26 +2,31 @@ import Link from "next/link";
 
 const Navbar = () => {
   return (
-    <div>
-      <ul className="flex justify-between m-10 items-center">
-        <div>
-          <Link href="/">
-            <li>Home</li>
-          </Link>
-        </div>
-        <div className="flex gap-10">
-          <Link href="/dashboard">
-            <li>Dashboard</li>
-          </Link>
-          <Link href="/login">
-            <li>Login</li>
-          </Link>
-          <Link href="/signup">
-            <li>Sign up</li>
-          </Link>
-        </div>
+    <nav className="bg-sky-300 text-blue-800 p-4">
+      <ul className="flex justify-between text-2xl font-bold">
+        <li>
+          <Link href="/">Home</Link>
+        </li>
+        <li>
+          <Link href="/signup">Sign up</Link>
+        </li>
+        <li>
+          <Link href="/api/auth/signin">Sign In</Link>
+        </li>
+        <li>
+          <Link href="/api/auth/signout">Sign Out</Link>
+        </li>
+        <li>
+          <Link href="/server">Server</Link>
+        </li>
+        <li>
+          <Link href="/client">Client</Link>
+        </li>
+        <li>
+          <Link href="/extra">Extra</Link>
+        </li>
       </ul>
-    </div>
+    </nav>
   );
 };
 

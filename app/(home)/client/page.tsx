@@ -1,5 +1,6 @@
 "use client";
-
+// Remember you must use an AuthProvider (in layout) for
+// client components to useSession
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
@@ -16,10 +17,13 @@ const ClientPage = () => {
   });
 
   return (
-    <section>
-      <p>Name: {session?.user?.name}</p>
-      <p>Email: {session?.user?.email}</p>
-    </section>
+    <>
+      <h2>Client page</h2>
+      <section>
+        <p>Name: {session?.user?.username}</p>
+        <p>Email: {session?.user?.email}</p>
+      </section>
+    </>
   );
 };
 
