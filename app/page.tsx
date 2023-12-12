@@ -17,8 +17,7 @@ export default async function Home() {
           <p>Name: {session?.user?.username}</p>
         ) : (
           <>
-            <h1>Home Page</h1>
-            <h1 className="text-5xl">
+            <h1 className="text-3xl">
               This page is protected. login to reaveal
             </h1>
             {/* <Button size="sm" variant="outline" onClick={() => signIn()}>
