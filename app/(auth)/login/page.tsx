@@ -25,6 +25,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import Link from "next/link";
 
 const formSchema = z.object({
   email: z
@@ -39,7 +40,7 @@ type Props = {};
 
 const LoginPage = (props: Props) => {
   const router = useRouter();
-  const [showPass, setShowPass] = useState(true);
+  const [showPass, setShowPass] = useState(false);
   const showHidePass = () => {
     setShowPass(!showPass);
   };
@@ -62,10 +63,7 @@ const LoginPage = (props: Props) => {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-2 mt-8"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="email"
@@ -114,15 +112,22 @@ const LoginPage = (props: Props) => {
                   </FormItem>
                 )}
               />
+
+              <Button disabled={isSubmitting} type="submit" className="w-full">
+                <KeySquare className="mr-2 h-4 w-4" /> Log In
+              </Button>
+              <div className="flex items-center gap-x-2">
+                No account yet?{" "}
+                <Link
+                  href="/signup"
+                  className="text-blue-600 underline hover:text-blue-800 transition"
+                >
+                  Sign up for free
+                </Link>
+              </div>
             </form>
           </Form>
         </CardContent>
-
-        <CardFooter>
-          <Button className="w-full">
-            <KeySquare className="mr-2 h-4 w-4" /> Log In
-          </Button>
-        </CardFooter>
       </Card>
     </div>
   );
