@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -31,7 +31,7 @@ import toast from "react-hot-toast";
 
 const formSchema = z
   .object({
-    email: z
+    username: z
       .string()
       .min(3, { message: "Email is required!" })
       .email({ message: "Please enter a valid email" }),
@@ -54,7 +54,7 @@ const Signup = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password1: "",
       password2: "",
     },
@@ -64,7 +64,7 @@ const Signup = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log("values", values);
     const credentials = {
-      username: values.email,
+      username: values.username,
       password1: values.password1,
       password2: values.password2,
     };
@@ -80,10 +80,31 @@ const Signup = () => {
       const data = response.data;
       if (data) {
         toast.success("Logged in!");
+        router.push("/");
       }
     } catch (error) {
       toast.error("Something went wrong...");
-      console.log("error:", error);
+      console.log("error:", error.response.data);
+      if (error.response.data) {
+        if (error.response.data["username"]) {
+          form.setError("username", {
+            type: "string",
+            message: error.response.data["username"],
+          });
+        }
+        if (error.response.data["password1"]) {
+          form.setError("password1", {
+            type: "string",
+            message: error.response.data["password1"],
+          });
+        }
+        if (error.response.data["password2"]) {
+          form.setError("password2", {
+            type: "string",
+            message: error.response.data["password2"],
+          });
+        }
+      }
     }
   };
 
@@ -98,7 +119,7 @@ const Signup = () => {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="email"
+                name="username"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Email</FormLabel>
