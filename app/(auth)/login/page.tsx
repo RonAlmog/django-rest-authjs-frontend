@@ -26,6 +26,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import Link from "next/link";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { SignInResponse, signIn } from "next-auth/react";
 
 const formSchema = z.object({
   email: z
@@ -54,6 +57,23 @@ const LoginPage = (props: Props) => {
   const { isSubmitting, isValid } = form.formState;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log("values", values);
+    try {
+      const res: SignInResponse = await signIn("credentials", {
+        username: values.email,
+        password: values.password,
+      });
+
+      console.log("res", res);
+      if (res.ok) {
+        toast.success("Logged in!");
+      }
+      if (res.error) {
+        toast.error("Error", res);
+      }
+    } catch (error) {
+      toast.error("Something went wrong...");
+      console.log("error:", error);
+    }
   };
   return (
     <div className="w-[400px] mx-auto mt-8">

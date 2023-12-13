@@ -42,6 +42,8 @@ export const authOptions: NextAuthOptions = {
             data: credentials,
           });
           const data = response.data;
+          // data has: access (token), refresh (token), user (pk, username, email, first_name, last_name)
+          console.log("data from login:", data);
           if (data) return data;
         } catch (error) {
           console.error(error);
@@ -52,6 +54,7 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
+      // console.log("callback user:", user);
       if (!SIGN_IN_PROVIDERS.includes(account.provider)) return false;
       return SIGN_IN_HANDLERS[account.provider](
         user,
@@ -61,10 +64,10 @@ export const authOptions: NextAuthOptions = {
         credentials
       );
     },
-    async jwt({ user, token, account }) {
+    async jwt({ user, token, account, profile }) {
       // If `user` and `account` are set that means it is a login event
       if (user && account) {
-        let backendResponse =
+        let backendResponse: any =
           account.provider === "credentials" ? user : account.meta;
         token["user"] = backendResponse.user;
         token["access_token"] = backendResponse.access;
@@ -73,7 +76,8 @@ export const authOptions: NextAuthOptions = {
         return token;
       }
       // Refresh the backend token if necessary
-      if (getCurrentEpochTime() > token["ref"]) {
+      if (getCurrentEpochTime() > Number(token["ref"])) {
+        console.log("Hooo, lets call refresh!!!!!!!");
         const response = await axios({
           method: "post",
           url: process.env.NEXTAUTH_BACKEND_URL + "auth/token/refresh/",
@@ -93,10 +97,10 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
   },
-  //   pages: {
-  //     signIn: "/login",
-  //     signOut: "/auth/signout",
-  //   },
+  pages: {
+    signIn: "/login",
+    //     signOut: "/auth/signout",
+  },
 };
 
 const handler = NextAuth(authOptions);
