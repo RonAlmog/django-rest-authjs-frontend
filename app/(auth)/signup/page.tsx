@@ -1,38 +1,74 @@
 "use client";
-import { Button } from "@/components/ui/button";
+
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormLabel,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { EyeIcon, EyeOff, EyeOffIcon, KeySquare } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
 
-type Props = {};
+const formSchema = z
+  .object({
+    email: z
+      .string()
+      .min(3, { message: "Email is required!" })
+      .email({ message: "Please enter a valid email" }),
+    password1: z
+      .string()
+      .min(6, { message: "Password must be at least 6 charachters long" }),
+    password2: z.string(),
+  })
+  .refine(
+    (data) => {
+      return data.password1 === data.password2;
+    },
+    { message: "Password do not match", path: ["password2"] }
+  );
 
-const Signup = (props: Props) => {
+const Signup = () => {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    setError("");
-    const email = e.target[0].value;
-    const password = e.target[1].value;
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password1: "",
+      password2: "",
+    },
+  });
 
-    console.log(email, password);
-    if (email.length < 3) {
-      setError("email is not valid");
-      return;
-    }
-    if (password.length < 3) {
-      setError("password is not valid");
-      return;
-    }
-    // call api
+  const { isSubmitting, isValid } = form.formState;
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log("values", values);
     const credentials = {
-      username: email,
-      password1: password,
-      password2: password,
+      username: values.email,
+      password1: values.password1,
+      password2: values.password2,
     };
-    console.log("credentials", credentials);
+
     try {
       const url = "http://127.0.0.1:8000/api/";
       // const url = process.env.NEXTAUTH_BACKEND_URL
@@ -43,42 +79,83 @@ const Signup = (props: Props) => {
       });
       const data = response.data;
       if (data) {
-        console.log("success!", data);
+        toast.success("Logged in!");
       }
     } catch (error) {
-      console.error("error:", error);
+      toast.error("Something went wrong...");
+      console.log("error:", error);
     }
   };
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="bg-[#212121] p-8 rounded shadow-sm w-96">
-        <h1 className="text-4xl text-center font-semibold mb-8">Sign Up</h1>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            className="w-full border border-gray-300 text-black rounded px-3 mb-4 focus:ouline-none focus:border-blue-400 focus:text-black"
-            placeholder="Email"
-            required
-          />
-          <input
-            type="text"
-            className="w-full border border-gray-300 text-black rounded px-3 mb-4 focus:ouline-none focus:border-blue-400 focus:text-black"
-            placeholder="Password"
-            required
-          />
-          <Button className="w-full" variant="outline">
-            Sign Up
-          </Button>
-          <p className="text-red-600 text-[16px] mb-4">{error && error}</p>
-        </form>
-        <div className="text-center text-sm text-gray-500 mt-4">- OR -</div>
-        <Link
-          className="block text-lg text-center text-blue-500 hover:underline mt-2"
-          href="/login"
-        >
-          Login with existing account
-        </Link>
-      </div>
+    <div className="w-[400px] mx-auto mt-8">
+      <Card>
+        <CardHeader>
+          <CardTitle>Sign Up</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isSubmitting}
+                        placeholder="john@gmail.com"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password1"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isSubmitting}
+                        type="password"
+                        placeholder="Password"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password2"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password confirm</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isSubmitting}
+                        type="password"
+                        placeholder="Password confirm"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button className="w-full" variant="default">
+                Sign Up
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
 };
