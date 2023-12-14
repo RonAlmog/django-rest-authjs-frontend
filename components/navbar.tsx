@@ -1,6 +1,15 @@
+"use client";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
+  const router = useRouter();
+  const onSignOut = () => {
+    signOut({ redirect: false }).then(() => {
+      router.push("/"); // Redirect to the dashboard page after signing out
+    });
+  };
   return (
     <nav className="bg-sky-300 text-blue-800 p-4">
       <ul className="flex justify-between text-2xl font-bold">
@@ -14,7 +23,9 @@ const Navbar = () => {
           <Link href="/api/auth/signin">Sign In</Link>
         </li>
         <li>
-          <Link href="/api/auth/signout">Sign Out</Link>
+          <Link href="#" onClick={onSignOut}>
+            Sign Out
+          </Link>
         </li>
         <li>
           <Link href="/server">Server</Link>
