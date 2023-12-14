@@ -43,18 +43,18 @@ export const authOptions: NextAuthOptions = {
           });
           const data = response.data;
           // data has: access (token), refresh (token), user (pk, username, email, first_name, last_name)
-          console.log("data from login:", data);
           if (data) return data;
         } catch (error) {
           console.error(error);
         }
+        // return null if user data cannot be retrieved
         return null;
       },
     }),
+    // more providers here
   ],
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      // console.log("callback user:", user);
       if (!SIGN_IN_PROVIDERS.includes(account.provider)) return false;
       return SIGN_IN_HANDLERS[account.provider](
         user,
@@ -77,7 +77,6 @@ export const authOptions: NextAuthOptions = {
       }
       // Refresh the backend token if necessary
       if (getCurrentEpochTime() > Number(token["ref"])) {
-        console.log("Hooo, lets call refresh!!!!!!!");
         const response = await axios({
           method: "post",
           url: process.env.NEXTAUTH_BACKEND_URL + "auth/token/refresh/",
@@ -101,6 +100,8 @@ export const authOptions: NextAuthOptions = {
     signIn: "/login",
     //     signOut: "/auth/signout",
   },
+  // Enable debug messages in the console if you are having problems
+  debug: process.env.NODE_ENV === "development",
 };
 
 const handler = NextAuth(authOptions);

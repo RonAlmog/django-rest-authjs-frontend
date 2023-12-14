@@ -33,11 +33,9 @@ import { SignInResponse, signIn } from "next-auth/react";
 const formSchema = z.object({
   email: z
     .string()
-    .min(3, { message: "Email is required!" })
+    .min(1, { message: "Email is required!" })
     .email({ message: "Please enter a valid email" }),
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 charachters long" }),
+  password: z.string().min(1, { message: "Password is required" }),
 });
 type Props = {};
 
@@ -47,6 +45,7 @@ const LoginPage = (props: Props) => {
   const showHidePass = () => {
     setShowPass(!showPass);
   };
+  const [invalidPassword, setInvalidPassword] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,23 +55,23 @@ const LoginPage = (props: Props) => {
   });
   const { isSubmitting, isValid } = form.formState;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log("values", values);
+    setInvalidPassword(false);
     try {
-      const res: SignInResponse = await signIn("credentials", {
+      await signIn("credentials", {
+        redirect: false,
         username: values.email,
         password: values.password,
+      }).then((res) => {
+        if (res?.error) {
+          setInvalidPassword(true);
+        }
+        if (res?.ok) {
+          toast.success("logged in!");
+          router.push("/");
+        }
       });
-
-      console.log("res", res);
-      if (res.ok) {
-        toast.success("Logged in!");
-      }
-      if (res.error) {
-        toast.error("Error", res);
-      }
     } catch (error) {
       toast.error("Something went wrong...");
-      console.log("error:", error);
     }
   };
   return (
@@ -127,12 +126,15 @@ const LoginPage = (props: Props) => {
                         </div>
                       </div>
                     </FormControl>
-
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
+              {invalidPassword && (
+                <div className="flex items-center justify-center mx-auto rounded-lg font-semibold text-sm text-rose-600 bg-rose-100 p-3">
+                  Incorrect username or password
+                </div>
+              )}
               <Button disabled={isSubmitting} type="submit" className="w-full">
                 <KeySquare className="mr-2 h-4 w-4" /> Log In
               </Button>
