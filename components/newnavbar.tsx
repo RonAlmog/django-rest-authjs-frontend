@@ -2,6 +2,7 @@
 
 import Container from "./container";
 import Logo from "./logo";
+import NavMenu from "./nav-menu";
 import UserMenu from "./user-menu";
 
 type Props = {};
@@ -13,6 +14,7 @@ const NewNavbar = (props: Props) => {
         <Container>
           <div className="flex flex-row items-center justify-between gap-3 md:gap-0">
             <Logo />
+            <NavMenu />
             <UserMenu />
           </div>
         </Container>
