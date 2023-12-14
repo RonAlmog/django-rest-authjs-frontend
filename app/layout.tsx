@@ -2,7 +2,6 @@ import "./globals.css";
 import AuthProvider from "@/context/auth-provider";
 import Navbar from "@/components/navbar";
 import { ToastProvider } from "@/context/toast-provider";
-import NewNavbar from "@/components/newnavbar";
 
 export const metadata = {
   title: "Create Next App",
@@ -19,7 +18,6 @@ export default async function RootLayout({
       <body>
         <AuthProvider>
           <ToastProvider />
-          <NewNavbar />
           <Navbar />
           <div className="mx-auto max-w-5xl gap-2 mb-10">{children}</div>
         </AuthProvider>

@@ -1,43 +1,25 @@
 "use client";
-import { signOut } from "next-auth/react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 
-const Navbar = () => {
-  const router = useRouter();
-  const onSignOut = () => {
-    signOut({ redirect: false }).then(() => {
-      router.push("/"); // Redirect to the dashboard page after signing out
-    });
-  };
+import Container from "./container";
+import Logo from "./logo";
+import NavMenu from "./nav-menu";
+import UserMenu from "./user-menu";
+
+type Props = {};
+
+const Navbar = (props: Props) => {
   return (
-    <nav className="bg-sky-300 text-blue-800 p-4">
-      <ul className="flex justify-between text-2xl font-bold">
-        <li>
-          <Link href="/">Home</Link>
-        </li>
-        <li>
-          <Link href="/signup">Sign up</Link>
-        </li>
-        <li>
-          <Link href="/api/auth/signin">Sign In</Link>
-        </li>
-        <li>
-          <Link href="#" onClick={onSignOut}>
-            Sign Out
-          </Link>
-        </li>
-        <li>
-          <Link href="/server">Server</Link>
-        </li>
-        <li>
-          <Link href="/client">Client</Link>
-        </li>
-        <li>
-          <Link href="/extra">Extra</Link>
-        </li>
-      </ul>
-    </nav>
+    <div className="fixed w-full bg-white z-10 shadow-sm">
+      <div className="py-4 border-b-[1px]">
+        <Container>
+          <div className="flex flex-row items-center justify-between gap-3 md:gap-0">
+            <Logo />
+            <NavMenu />
+            <UserMenu />
+          </div>
+        </Container>
+      </div>
+    </div>
   );
 };
 

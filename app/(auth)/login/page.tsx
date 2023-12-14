@@ -67,6 +67,7 @@ const LoginPage = (props: Props) => {
         }
         if (res?.ok) {
           toast.success("logged in!");
+          router.refresh();
           router.push("/");
         }
       });
