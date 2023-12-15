@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import Container from "./container";
 import Logo from "./logo";
 import NavMenu from "./nav-menu";
-import UserMenu from "./usermenu";
+import UserMenu from "./user-menu";
 import { User } from "@/types";
 import { Session } from "next-auth";
 
