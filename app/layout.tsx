@@ -19,7 +19,9 @@ export default async function RootLayout({
         <AuthProvider>
           <ToastProvider />
           <Navbar />
-          <div className="mx-auto max-w-5xl gap-2 mb-10">{children}</div>
+          <div className="mx-auto p-2 max-w-7xl gap-2 mb-10 border border-slate-700 ">
+            {children}
+          </div>
         </AuthProvider>
       </body>
     </html>
