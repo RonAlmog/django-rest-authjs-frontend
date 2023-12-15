@@ -25,16 +25,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 interface UserMenuProps {
   session: Session;
 }
 
 const UserMenu = ({ session }: UserMenuProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggleOpen = useCallback(() => {
-    setIsOpen((value) => !value);
-  }, []);
+  const router = useRouter();
+  const onSignOut = () => {
+    signOut({ redirect: false }).then(() => {
+      router.refresh();
+      router.push("/"); // Redirect to the dashboard page after signing out
+    });
+  };
 
   return (
     <DropdownMenu>
@@ -62,7 +67,7 @@ const UserMenu = ({ session }: UserMenuProps) => {
                     <CreditCard className="mr-2 h-4 w-4" />
                     <span>Billing</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={onSignOut}>
                     <DoorClosed className="mr-2 h-4 w-4" />
                     <span>Sign Out</span>
                   </DropdownMenuItem>
