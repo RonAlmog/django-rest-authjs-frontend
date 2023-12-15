@@ -35,9 +35,15 @@ const formSchema = z
       .string()
       .min(3, { message: "Email is required!" })
       .email({ message: "Please enter a valid email" }),
+    first_name: z
+      .string()
+      .min(2, { message: "First name must 2 characters min" }),
+    last_name: z
+      .string()
+      .min(2, { message: "Last name must 2 characters min" }),
     password1: z
       .string()
-      .min(6, { message: "Password must be at least 6 charachters long" }),
+      .min(6, { message: "Password must be at least 6 characters long" }),
     password2: z.string(),
   })
   .refine(
@@ -55,6 +61,8 @@ const Signup = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
+      first_name: "",
+      last_name: "",
       password1: "",
       password2: "",
     },
@@ -65,9 +73,14 @@ const Signup = () => {
     console.log("values", values);
     const credentials = {
       username: values.username,
+      email: values.username,
+      first_name: values.first_name,
+      last_name: values.last_name,
       password1: values.password1,
       password2: values.password2,
     };
+
+    console.log("cred", credentials);
 
     try {
       const url = "http://127.0.0.1:8000/api/";
@@ -128,6 +141,41 @@ const Signup = () => {
                         {...field}
                         disabled={isSubmitting}
                         placeholder="john@gmail.com"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="first_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>First Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isSubmitting}
+                        placeholder="johny"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="last_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Last Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isSubmitting}
+                        placeholder="Smith"
                       />
                     </FormControl>
                     <FormMessage />
