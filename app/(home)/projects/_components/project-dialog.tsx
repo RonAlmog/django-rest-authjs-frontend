@@ -70,8 +70,8 @@ const ProjectDialog = () => {
     console.log("values", values);
     const project = {
       name: values.name,
-      start_date: values.start_date,
-      end_date: values.end_date,
+      start_date: format(values.start_date, "yyyy-MM-dd"),
+      end_date: format(values.end_date, "yyyy-MM-dd"),
       comments: values.comments,
       status: values.status,
     };
@@ -92,6 +92,24 @@ const ProjectDialog = () => {
     } catch (error) {
       toast.error("Something went wrong...");
       console.log("error:", error.response.data);
+      if (error.response.data["name"]) {
+        form.setError("name", {
+          type: "string",
+          message: error.response.data["name"],
+        });
+      }
+      if (error.response.data["start_date"]) {
+        form.setError("start_date", {
+          type: "string",
+          message: error.response.data["start_date"],
+        });
+      }
+      if (error.response.data["end_date"]) {
+        form.setError("end_date", {
+          type: "string",
+          message: error.response.data["end_date"],
+        });
+      }
     }
   };
 
@@ -159,9 +177,6 @@ const ProjectDialog = () => {
                         selected={field.value}
                         onSelect={field.onChange}
                         initialFocus
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
                       />
                     </PopoverContent>
                   </Popover>
@@ -203,9 +218,6 @@ const ProjectDialog = () => {
                         selected={field.value}
                         onSelect={field.onChange}
                         initialFocus
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
                       />
                     </PopoverContent>
                   </Popover>
