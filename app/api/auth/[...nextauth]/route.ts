@@ -17,6 +17,24 @@ const SIGN_IN_HANDLERS = {
   credentials: async (user, account, profile, email, credentials) => {
     return true;
   },
+
+  google: async (user, account, profile, email, credentials) => {
+    try {
+      console.log("account:", account);
+      const response = await axios({
+        method: "post",
+        url: process.env.NEXTAUTH_BACKEND_URL + "auth/google/",
+        data: {
+          access_token: account["id_token"],
+        },
+      });
+      account["meta"] = response.data;
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  },
 };
 const SIGN_IN_PROVIDERS = Object.keys(SIGN_IN_HANDLERS);
 

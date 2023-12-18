@@ -19,7 +19,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { EyeIcon, EyeOff, EyeOffIcon, KeySquare } from "lucide-react";
+import { Bug, EyeIcon, EyeOff, EyeOffIcon, KeySquare } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -138,6 +138,14 @@ const LoginPage = (props: Props) => {
               )}
               <Button disabled={isSubmitting} type="submit" className="w-full">
                 <KeySquare className="mr-2 h-4 w-4" /> Log In
+              </Button>
+              <Button
+                disabled={isSubmitting}
+                type="button"
+                className="w-full"
+                onClick={() => signIn("google")}
+              >
+                <Bug className="mr-2 h-4 w-4" /> Log In with Google
               </Button>
               <div className="flex items-center gap-x-2">
                 No account yet?{" "}
