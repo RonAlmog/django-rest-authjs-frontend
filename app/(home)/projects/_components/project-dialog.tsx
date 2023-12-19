@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -116,7 +116,10 @@ const ProjectDialog = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Add Project</Button>
+        <Button variant="outline">
+          <Plus className="mr-2 h-4 w-4" />
+          Add Project
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
