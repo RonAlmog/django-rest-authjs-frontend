@@ -1,32 +1,37 @@
-import React from "react";
+"use client";
+
 import ProjectDialog from "./_components/project-dialog";
 import { DataTable } from "./_components/data-table";
 import { columns } from "./_components/colomns";
 import { format } from "date-fns";
 import Heading from "@/components/heading";
 import { Separator } from "@/components/ui/separator";
+import axios from "axios";
+import { getProjects } from "@/actions/get-projects";
+import { useEffect, useState } from "react";
 
-const ProjectsPage = async () => {
-  async function getData(): Promise<Project[]> {
-    // Fetch data from your API here.
-    return [
-      {
-        name: "proj1",
-        start_date: new Date("1/1/2001"),
-        end_date: new Date("1/1/2001"),
-        status: "pending",
-      },
-    ];
-  }
+const ProjectsPage = () => {
+  const [projects, setProjects] = useState<SafeProject[]>([]);
 
-  const projects: Project[] = await getData();
+  useEffect(() => {
+    const getThePrjects = async () => {
+      try {
+        const data = await getProjects();
+        if (data) {
+          const formattedData = data.map((p: Project) => ({
+            name: p.name,
+            start_date: format(p.start_date, "dd/MM/yyyy"),
+            end_date: format(p.end_date, "dd/MM/yyyy"),
+            status: p.status,
+          }));
 
-  const formattedData = projects.map((p) => ({
-    name: p.name,
-    start_date: format(p.start_date, "dd/MM/yyyy"),
-    end_date: format(p.end_date, "dd/MM/yyyy"),
-    status: p.status,
-  }));
+          setProjects(formattedData);
+        }
+      } catch (error) {}
+    };
+
+    getThePrjects();
+  }, []);
 
   return (
     <div className="flex-col">
@@ -40,7 +45,7 @@ const ProjectsPage = async () => {
         </div>
         <Separator />
 
-        <DataTable columns={columns} data={formattedData} />
+        <DataTable columns={columns} data={projects} />
       </div>
     </div>
   );

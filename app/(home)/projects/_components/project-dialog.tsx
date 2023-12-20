@@ -87,6 +87,7 @@ const ProjectDialog = () => {
       const data = response.data;
       if (data) {
         toast.success("Project created");
+        // router.refresh();
         router.push("/");
       }
     } catch (error) {

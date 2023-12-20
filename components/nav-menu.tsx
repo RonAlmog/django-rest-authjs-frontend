@@ -117,9 +117,9 @@ const NavMenu = () => {
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href="/extra" legacyBehavior passHref>
+          <Link href="/projects" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Extra
+              Projects
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>

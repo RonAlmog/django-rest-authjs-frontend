@@ -33,7 +33,9 @@ const CellAction = ({ data }: CellActionProps) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/products/${data.name}`);
+      await axios.delete(
+        `${process.env.NEXTAUTH_BACKEND_URL}/products/${data.name}`
+      );
       router.refresh();
       toast.success("Product deleted");
     } catch (error) {
